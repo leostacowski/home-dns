@@ -1,4 +1,4 @@
-import Logger from '../common/logger.js'
+import Logger from '@common/logger.js'
 
 const logger = Logger('home-dns')
 
