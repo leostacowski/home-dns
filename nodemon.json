@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "ignore": ["node_modules/**/*", "dist/**/*"],
+  "watch": ["src/**/*"],
+  "exec": "cls && babel-node dist/bundle.js",
+  "ext": "js,json",
+  "delay": "1000"
+}
