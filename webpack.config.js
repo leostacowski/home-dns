@@ -1,19 +1,30 @@
-import path from 'path'
+const path = require('path')
 
-export default {
+module.exports = {
   mode: 'production',
-  entry: './src/core/index.js',
+  target: 'node',
+  entry: {
+    deps: ['winston'],
+    core: {
+      import: './src/core/index.js',
+      dependOn: 'deps',
+    },
+  },
   resolve: {
     alias: {
-      '@common': path.resolve(process.cwd(), 'src/common/'),
-      '@core': path.resolve(process.cwd(), 'src/core/'),
-      '@modules': path.resolve(process.cwd(), 'src/modules/'),
-      '@scripts': path.resolve(process.cwd(), 'src/scripts/'),
+      '@common': path.resolve(process.cwd(), './src/common/'),
+      '@core': path.resolve(process.cwd(), './src/core/'),
+      '@modules': path.resolve(process.cwd(), './src/modules/'),
+      '@scripts': path.resolve(process.cwd(), './src/scripts/'),
     },
   },
   output: {
+    clean: true,
     path: path.resolve(process.cwd(), 'dist'),
-    filename: 'main.bundle.js',
+    filename: '[name].bundle.js',
+    chunkLoading: 'async-node',
+    chunkFormat: 'commonjs',
+    chunkFilename: 'chunk.[id].js',
   },
   module: {
     rules: [
@@ -29,5 +40,4 @@ export default {
       },
     ],
   },
-  target: 'node',
 }

@@ -8,20 +8,20 @@
   "private": false,
   "scripts": {
     "setup": "yarn && cls",
-    "dev": "yarn setup && nodemon --config nodemon.json",
-    "build": "yarn setup && nodemon --config nodemon.json"
+    "build": "yarn setup && webpack --config webpack.config.js",
+    "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
     "winston": "^3.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
-    "@babel/node": "^7.26.0",
     "@babel/preset-env": "^7.26.9",
     "babel-loader": "^10.0.0",
     "jsdoc": "^4.0.4",
     "nodemon": "^3.1.9",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
