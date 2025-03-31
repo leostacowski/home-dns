@@ -1,13 +1,30 @@
 import { fork } from 'child_process'
-
-// fork(`dist/udp_proxy.bundle.js`, {
-//   shell: true,
-// })
-
-const tcpWorker = fork(`dist/tcp_proxy_worker.bundle.js`, {
-  shell: true,
-})
-
+import { cpus } from 'os'
 import { TCPProxy } from '@modules/tcp_proxy'
+import { UDPProxy } from '@modules/udp_proxy'
 
-TCPProxy(tcpWorker).start()
+const Core = async () => {
+  const workerCount = new Array(Math.ceil(cpus().length / 2)).fill(true)
+
+  const tcpWorkers = await Promise.all(
+    workerCount.map(() =>
+      fork(`dist/tcp_proxy_worker.bundle.js`, {
+        shell: true,
+      }),
+    ),
+  )
+
+  TCPProxy(tcpWorkers).start()
+
+  const udpWorkers = await Promise.all(
+    workerCount.map(() =>
+      fork(`dist/udp_proxy_worker.bundle.js`, {
+        shell: true,
+      }),
+    ),
+  )
+
+  UDPProxy(udpWorkers).start()
+}
+
+Core()

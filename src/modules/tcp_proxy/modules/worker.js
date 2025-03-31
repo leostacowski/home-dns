@@ -1,35 +1,42 @@
 import { createConnection } from 'net'
+import { Logger } from '@common/logger.js'
 
-const Worker = ({ connectionId, address, port, requestData }) => {
-  requestData = Buffer.from(requestData, 'binary')
+const Worker = () => {
+  const logger = Logger(`tcp_proxy_worker_${process.pid}`)
 
-  const client = createConnection({
-    port,
-    host: address,
-  })
+  logger.info(`Worker is ready for requests`)
 
-  client.write(requestData)
+  const getResponse = ({ connectionId, address, port, requestData }) => {
+    requestData = Buffer.from(requestData, 'binary')
 
-  client.on(
-    'data',
-    (resData) =>
+    const client = createConnection({
+      port,
+      host: address,
+    })
+
+    client.on('data', (resData) => {
       process.send({
         connectionId,
         address,
         port,
         response: Buffer.from(resData).toString('binary'),
-      }),
+      })
 
-    client.end(),
-  )
+      client.end()
+    })
 
-  client.on('error', () => {
-    client.end()
-  })
+    client.on('error', () => {
+      client.end()
+    })
 
-  client.on('end', () => {
-    client.destroy()
-  })
+    client.on('end', () => {
+      client.destroy()
+    })
+
+    client.write(requestData)
+  }
+
+  process.on('message', getResponse)
 }
 
-process.on('message', Worker)
+Worker()

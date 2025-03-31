@@ -1,4 +1,4 @@
-import { dns_servers } from '@config'
+import { dns_servers } from '@common/configs.js'
 
 export const DNSHosts = () => {
   const random_server = dns_servers[Math.floor(Math.random() * dns_servers.length)]

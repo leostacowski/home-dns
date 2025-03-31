@@ -16,13 +16,8 @@ export const Logger = (loggerLabel = '') => {
         format: combine(label({ label: loggerLabel }), timestamp(), printf(logFormat)),
       }),
       new transports.File({
-        level: 'info',
-        filename: 'logs/debug.log',
-        format: combine(label({ label: loggerLabel }), timestamp(), json(logFormat)),
-      }),
-      new transports.File({
         level: 'error',
-        filename: 'logs/error.log',
+        filename: `logs/${new Date().toDateString()}/error.log`,
         format: combine(label({ label: loggerLabel }), timestamp(), json(logFormat)),
       }),
     ],

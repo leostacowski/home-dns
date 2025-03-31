@@ -1,21 +1,22 @@
 import { Listener } from '@modules/tcp_proxy/modules/listener'
 import { Logger } from '@common/logger.js'
 import { DNSHosts } from '@modules/dns_hosts'
-import { tcp_proxy } from '@config'
+import { tcp_proxy } from '@common/configs.js'
 
-export const TCPProxy = (tcpWorker) => {
+export const TCPProxy = (tcpWorkers) => {
   const dnsHosts = DNSHosts()
   const logger = Logger('tcp_proxy')
   const connections = {}
 
   const requestWorkerResponse = async (requestId, requestData) => {
-    const { target_servers } = dnsHosts
+    const randomWorker = tcpWorkers[Math.floor(Math.random() * tcpWorkers.length)]
     const encodedRequestData = Buffer.from(requestData).toString('binary')
+    const { target_servers } = dnsHosts
 
     let workerResponse = ''
 
     target_servers.forEach((dns_server) =>
-      tcpWorker.send({
+      randomWorker.send({
         connectionId: requestId,
         address: dns_server.address,
         port: dns_server.port,
@@ -30,8 +31,6 @@ export const TCPProxy = (tcpWorker) => {
         if (connectionId === requestId && !workerResponse && response) {
           workerResponse = Buffer.from(response, 'binary')
 
-          resolve(null)
-
           if (connections?.[requestId])
             connections[requestId] = {
               ...connections[requestId],
@@ -39,16 +38,17 @@ export const TCPProxy = (tcpWorker) => {
               port,
             }
 
-          tcpWorker.removeListener('message', messageHandler)
+          randomWorker.removeListener('message', messageHandler)
           clearTimeout(timeout)
+          resolve(null)
         }
       }
 
-      tcpWorker.on('message', messageHandler)
+      randomWorker.on('message', messageHandler)
 
       timeout = setTimeout(() => {
+        randomWorker.removeListener('message', messageHandler)
         resolve(null)
-        tcpWorker.removeListener('message', messageHandler)
       }, tcp_proxy.workerTTL)
     })
 

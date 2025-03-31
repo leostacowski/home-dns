@@ -4,24 +4,23 @@ module.exports = {
   mode: 'production',
   target: 'node',
   entry: {
-    deps: ['winston'],
+    common: ['./src/common/logger.js', './src/common/configs.js'],
     core: {
       import: './src/core/index.js',
-      dependOn: ['deps'],
+      dependOn: ['common'],
     },
     udp_proxy_worker: {
       import: './src/modules/udp_proxy/modules/worker.js',
-      dependOn: ['deps'],
+      dependOn: ['common'],
     },
     tcp_proxy_worker: {
       import: './src/modules/tcp_proxy/modules/worker.js',
-      dependOn: ['deps'],
+      dependOn: ['common'],
     },
   },
   resolve: {
     alias: {
       '@common': path.resolve(process.cwd(), './src/common/'),
-      '@config': path.resolve(process.cwd(), './src/config/'),
       '@core': path.resolve(process.cwd(), './src/core/'),
       '@modules': path.resolve(process.cwd(), './src/modules/'),
       '@scripts': path.resolve(process.cwd(), './src/scripts/'),

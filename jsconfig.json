@@ -8,7 +8,6 @@
     "moduleResolution": "node",
     "paths": {
       "@common/*": ["src/common/*"],
-      "@config/*": ["src/config/*"],
       "@core/*": ["src/core/*"],
       "@modules/*": ["src/modules/*"],
       "@scripts/*": ["src/scripts/*"]

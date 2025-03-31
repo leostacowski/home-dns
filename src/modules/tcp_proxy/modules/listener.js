@@ -1,6 +1,6 @@
 import { createServer } from 'net'
 import { Logger } from '@common/logger.js'
-import { tcp_proxy } from '@config'
+import { tcp_proxy } from '@common/configs.js'
 
 export const Listener = ({
   requestWorkerResponse = () => {},
@@ -23,8 +23,6 @@ export const Listener = ({
 
     onConnectionStart(connectionId, Date.now())
 
-    requestSocket.setTimeout(tcp_proxy.socketTTL)
-
     requestSocket.on('data', async (requestData) => {
       try {
         const response = await requestWorkerResponse(connectionId, requestData)
@@ -42,11 +40,6 @@ export const Listener = ({
       requestSocket.end()
     })
 
-    requestSocket.on('timeout', () => {
-      logger.warn(`Socket timeout`)
-      requestSocket.end()
-    })
-
     requestSocket.on('end', () => {
       onConnectionEnd(connectionId, Date.now())
       requestSocket.destroy()
@@ -56,7 +49,6 @@ export const Listener = ({
   server.listen({
     host: tcp_proxy.address,
     port: tcp_proxy.port,
-    reusePort: true,
   })
 }
 
