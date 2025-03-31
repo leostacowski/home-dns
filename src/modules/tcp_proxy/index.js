@@ -26,7 +26,7 @@ export const TCPProxy = (tcpWorker) => {
     await new Promise((resolve) => {
       let timeout = null
 
-      const listener = ({ connectionId, response, address, port }) => {
+      const messageHandler = ({ connectionId, response, address, port }) => {
         if (connectionId === requestId && !workerResponse && response) {
           workerResponse = Buffer.from(response, 'binary')
 
@@ -37,15 +37,15 @@ export const TCPProxy = (tcpWorker) => {
           }
 
           clearTimeout(timeout)
-          tcpWorker.removeListener('message', listener)
+          tcpWorker.removeListener('message', messageHandler)
           resolve(null)
         }
       }
 
-      tcpWorker.on('message', listener)
+      tcpWorker.on('message', messageHandler)
 
       timeout = setTimeout(() => {
-        tcpWorker.removeListener('message', listener)
+        tcpWorker.removeListener('message', messageHandler)
         resolve(null)
       }, tcp_proxy.workerTTL)
     })
