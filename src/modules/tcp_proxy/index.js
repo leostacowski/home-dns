@@ -30,23 +30,25 @@ export const TCPProxy = (tcpWorker) => {
         if (connectionId === requestId && !workerResponse && response) {
           workerResponse = Buffer.from(response, 'binary')
 
-          connections[requestId] = {
-            ...connections[requestId],
-            address,
-            port,
-          }
-
-          clearTimeout(timeout)
-          tcpWorker.removeListener('message', messageHandler)
           resolve(null)
+
+          if (connections?.[requestId])
+            connections[requestId] = {
+              ...connections[requestId],
+              address,
+              port,
+            }
+
+          tcpWorker.removeListener('message', messageHandler)
+          clearTimeout(timeout)
         }
       }
 
       tcpWorker.on('message', messageHandler)
 
       timeout = setTimeout(() => {
-        tcpWorker.removeListener('message', messageHandler)
         resolve(null)
+        tcpWorker.removeListener('message', messageHandler)
       }, tcp_proxy.workerTTL)
     })
 
