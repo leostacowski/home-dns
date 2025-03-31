@@ -37,6 +37,8 @@ export const dns_servers = [
 ]
 
 export const tcp_proxy = {
+  socketTTL: 10000,
+  workerTTL: 5000,
   address: '0.0.0.0',
   port: 53,
 }

@@ -11,6 +11,7 @@ const TCPProxy = () => {
   server.listen({
     host: tcp_proxy.address,
     port: tcp_proxy.port,
+    reusePort: true,
   })
 
   const getResponse = async (reqData) => {

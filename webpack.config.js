@@ -9,12 +9,12 @@ module.exports = {
       import: './src/core/index.js',
       dependOn: ['deps'],
     },
-    udp_proxy: {
-      import: './src/modules/udp_proxy.js',
+    udp_proxy_worker: {
+      import: './src/modules/udp_proxy/modules/worker.js',
       dependOn: ['deps'],
     },
-    tcp_proxy: {
-      import: './src/modules/tcp_proxy.js',
+    tcp_proxy_worker: {
+      import: './src/modules/tcp_proxy/modules/worker.js',
       dependOn: ['deps'],
     },
   },
