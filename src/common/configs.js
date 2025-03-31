@@ -1,3 +1,5 @@
+import('dotenv/config')
+
 const {
   DNS_SERVERS,
   PROXY_WORKERS_COUNT,

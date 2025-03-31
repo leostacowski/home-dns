@@ -1,0 +1,25 @@
+name: home_dns
+
+services:
+  node:
+    container_name: node_container
+    privileged: true
+    pull_policy: missing
+    build:
+      context: .
+      no_cache: true
+      dockerfile_inline: |
+        FROM node:lts-slim
+        COPY dist /dist
+        EXPOSE 53/tcp
+        EXPOSE 53/udp
+        CMD ["node", "./dist/core.bundle.js"]
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 10
+        delay: 5s
+        window: 30s
+    ports:
+      - 54:53/tcp
+      - 54:53/udp
