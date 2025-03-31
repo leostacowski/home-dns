@@ -1,7 +1,9 @@
-import Logger from '@common/logger.js'
+import { fork } from 'child_process'
 
-const logger = Logger('home-dns')
+fork(`dist/tcp_proxy.bundle.js`, {
+  shell: true,
+})
 
-logger.info('Hello world!')
-logger.warn('Hello world!')
-logger.error('Hello world!')
+fork(`dist/udp_proxy.bundle.js`, {
+  shell: true,
+})

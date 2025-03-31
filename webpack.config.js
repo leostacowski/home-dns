@@ -7,12 +7,21 @@ module.exports = {
     deps: ['winston'],
     core: {
       import: './src/core/index.js',
-      dependOn: 'deps',
+      dependOn: ['deps'],
+    },
+    udp_proxy: {
+      import: './src/modules/udp_proxy.js',
+      dependOn: ['deps'],
+    },
+    tcp_proxy: {
+      import: './src/modules/tcp_proxy.js',
+      dependOn: ['deps'],
     },
   },
   resolve: {
     alias: {
       '@common': path.resolve(process.cwd(), './src/common/'),
+      '@config': path.resolve(process.cwd(), './src/config/'),
       '@core': path.resolve(process.cwd(), './src/core/'),
       '@modules': path.resolve(process.cwd(), './src/modules/'),
       '@scripts': path.resolve(process.cwd(), './src/scripts/'),

@@ -1,6 +1,6 @@
 import { createLogger, transports, format } from 'winston'
 
-const Logger = (loggerLabel = '') => {
+export const Logger = (loggerLabel = '') => {
   const { combine, timestamp, label, printf, json } = format
 
   const getMessage = (message) =>
