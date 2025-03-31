@@ -37,11 +37,16 @@ const TCPProxy = () => {
             response = resData
           })
 
+          const timeout = setTimeout(() => {
+            errored = true
+          }, 10000)
+
           const interval = setInterval(() => {
             if (response || errored) {
               client.end()
-              resolve(null)
               clearInterval(interval)
+              clearTimeout(timeout)
+              resolve(null)
             }
           }, 1)
         })
