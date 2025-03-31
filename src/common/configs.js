@@ -1,48 +1,26 @@
-export const dns_servers = [
-  {
-    address: '94.140.14.14',
-    port: 53,
-  },
-  {
-    address: '8.8.8.8',
-    port: 53,
-  },
-  {
-    address: '1.1.1.1',
-    port: 53,
-  },
-  {
-    address: '9.9.9.9',
-    port: 53,
-  },
-  {
-    address: '208.67.222.222',
-    port: 53,
-  },
-  {
-    address: '76.76.2.0',
-    port: 53,
-  },
-  {
-    address: '119.29.29.29',
-    port: 53,
-  },
-]
+const {
+  DNS_SERVERS,
+  PROXY_WORKERS_COUNT,
+  TCP_PROXY_TIMEOUT,
+  TCP_PROXY_ADDRESS,
+  TCP_PROXY_PORT,
+  UDP_PROXY_TIMEOUT,
+  UDP_PROXY_ADDRESS,
+  UDP_PROXY_PORT,
+} = process.env
 
-export const tcp_proxy = {
-  workerTTL: 2000,
-  address: '127.0.0.1',
-  port: 53,
-}
+export const dns_servers = String(DNS_SERVERS || '8.8.8.8,1.1.1.1').split(',')
 
-export const udp_proxy = {
-  workerTTL: 2000,
-  address: '127.0.0.1',
-  port: 53,
-}
+export const proxy_workers_count = Number(PROXY_WORKERS_COUNT || '2')
 
-export default {
-  tcp_proxy,
-  udp_proxy,
-  dns_servers,
-}
+export const tcp_proxy_timeout = Number(TCP_PROXY_TIMEOUT || '1000')
+
+export const tcp_proxy_address = String(TCP_PROXY_ADDRESS || '127.0.0.1')
+
+export const tcp_proxy_port = Number(TCP_PROXY_PORT || '53')
+
+export const udp_proxy_timeout = Number(UDP_PROXY_TIMEOUT || '1000')
+
+export const udp_proxy_address = String(UDP_PROXY_ADDRESS || '127.0.0.1')
+
+export const udp_proxy_port = Number(UDP_PROXY_PORT || '53')

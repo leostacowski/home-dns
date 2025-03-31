@@ -9,6 +9,15 @@ export const Logger = (loggerLabel = '') => {
   const logFormat = ({ level, message, label, timestamp }) =>
     `${timestamp} [${label}] ${level}: '${getMessage(message)}'`
 
+  const logDirPath = () => {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+
+    return `logs/${year}-${month}-${day}`
+  }
+
   return createLogger({
     transports: [
       new transports.Console({
@@ -17,7 +26,7 @@ export const Logger = (loggerLabel = '') => {
       }),
       new transports.File({
         level: 'error',
-        filename: `logs/${new Date().toDateString()}/error.log`,
+        filename: `${logDirPath()}/error.log`,
         format: combine(label({ label: loggerLabel }), timestamp(), json(logFormat)),
       }),
     ],

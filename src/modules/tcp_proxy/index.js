@@ -1,7 +1,7 @@
 import { Listener } from '@modules/tcp_proxy/modules/listener'
 import { Logger } from '@common/logger.js'
 import { DNSHosts } from '@modules/dns_hosts'
-import { tcp_proxy } from '@common/configs.js'
+import { tcp_proxy_timeout } from '@common/configs.js'
 
 export const TCPProxy = (tcpWorkers) => {
   const dnsHosts = DNSHosts()
@@ -49,7 +49,7 @@ export const TCPProxy = (tcpWorkers) => {
       timeout = setTimeout(() => {
         randomWorker.removeListener('message', messageHandler)
         resolve(null)
-      }, tcp_proxy.workerTTL)
+      }, tcp_proxy_timeout)
     })
 
     return workerResponse

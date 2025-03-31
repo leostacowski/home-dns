@@ -9,8 +9,7 @@
     "paths": {
       "@common/*": ["src/common/*"],
       "@core/*": ["src/core/*"],
-      "@modules/*": ["src/modules/*"],
-      "@scripts/*": ["src/scripts/*"]
+      "@modules/*": ["src/modules/*"]
     }
   }
 }

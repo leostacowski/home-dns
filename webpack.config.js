@@ -1,10 +1,16 @@
+const webpack = require('webpack')
 const path = require('path')
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 module.exports = {
   mode: 'production',
   target: 'node',
   entry: {
-    common: ['./src/common/logger.js', './src/common/configs.js'],
+    common: {
+      import: ['./src/common/logger.js', './src/common/configs.js'],
+    },
     core: {
       import: './src/core/index.js',
       dependOn: ['common'],
@@ -23,16 +29,12 @@ module.exports = {
       '@common': path.resolve(process.cwd(), './src/common/'),
       '@core': path.resolve(process.cwd(), './src/core/'),
       '@modules': path.resolve(process.cwd(), './src/modules/'),
-      '@scripts': path.resolve(process.cwd(), './src/scripts/'),
     },
   },
   output: {
     clean: true,
     path: path.resolve(process.cwd(), 'dist'),
     filename: '[name].bundle.js',
-    chunkLoading: 'async-node',
-    chunkFormat: 'commonjs',
-    chunkFilename: 'chunk.[id].js',
   },
   module: {
     rules: [
@@ -48,4 +50,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env),
+    }),
+  ],
 }

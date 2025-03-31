@@ -11,6 +11,7 @@
     "dev": "yarn && nodemon --config nodemon.json"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "winston": "^3.17.0"
   },
   "devDependencies": {

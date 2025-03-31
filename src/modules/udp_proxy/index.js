@@ -1,7 +1,7 @@
 import { Listener } from '@modules/udp_proxy/modules/listener'
 import { Logger } from '@common/logger.js'
 import { DNSHosts } from '@modules/dns_hosts'
-import { udp_proxy } from '@common/configs.js'
+import { udp_proxy_timeout } from '@common/configs.js'
 
 export const UDPProxy = (udpWorkers) => {
   const dnsHosts = DNSHosts()
@@ -49,7 +49,7 @@ export const UDPProxy = (udpWorkers) => {
       timeout = setTimeout(() => {
         randomWorker.removeListener('message', messageHandler)
         resolve(null)
-      }, udp_proxy.workerTTL)
+      }, udp_proxy_timeout)
     })
 
     return workerResponse

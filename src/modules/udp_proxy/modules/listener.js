@@ -1,6 +1,6 @@
 import { createSocket } from 'dgram'
 import { Logger } from '@common/logger.js'
-import { udp_proxy } from '@common/configs.js'
+import { udp_proxy_address, udp_proxy_port } from '@common/configs.js'
 
 export const Listener = ({
   requestWorkerResponse = () => {},
@@ -32,7 +32,7 @@ export const Listener = ({
   })
 
   server.bind({
-    address: udp_proxy.address,
-    port: udp_proxy.port,
+    address: udp_proxy_address,
+    port: udp_proxy_port,
   })
 }

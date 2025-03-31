@@ -4,7 +4,7 @@ import { Logger } from '@common/logger.js'
 const Worker = () => {
   const logger = Logger(`udp_proxy_worker_${process.pid}`)
 
-  logger.info(`Worker is ready for requests`)
+  logger.info(`Worker is ready`)
 
   const getResponse = ({ connectionId, address, port, requestData }) => {
     requestData = Buffer.from(requestData, 'binary')

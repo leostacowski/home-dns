@@ -1,6 +1,6 @@
 import { createServer } from 'net'
 import { Logger } from '@common/logger.js'
-import { tcp_proxy } from '@common/configs.js'
+import { tcp_proxy_address, tcp_proxy_port } from '@common/configs.js'
 
 export const Listener = ({
   requestWorkerResponse = () => {},
@@ -47,8 +47,8 @@ export const Listener = ({
   })
 
   server.listen({
-    host: tcp_proxy.address,
-    port: tcp_proxy.port,
+    host: tcp_proxy_address,
+    port: tcp_proxy_port,
   })
 }
 
