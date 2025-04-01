@@ -2,7 +2,7 @@
   "verbose": true,
   "ignore": ["node_modules/**/*", "dist/**/*", "logs/**/*"],
   "watch": ["*"],
-  "exec": "cls && yarn build && node --harmony ./dist/core.bundle.js",
+  "exec": "cls && webpack --config webpack.config.js && node --harmony ./dist/core.bundle.js",
   "ext": "js,json",
   "delay": "1000"
 }
