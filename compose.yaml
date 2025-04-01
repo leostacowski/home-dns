@@ -1,18 +1,23 @@
-name: home_dns
+name: home-dns
 
 services:
-  node:
-    container_name: node_container
+  home-dns-node-service:
+    container_name: home-dns-node-container
     pull_policy: missing
     build:
       context: .
       no_cache: true
       dockerfile_inline: |
         FROM node:lts-slim
+        USER root
         RUN apt-get update -y
-        RUN apt-get install dnsutils -y
+        RUN apt-get install ufw -y
+        RUN ufw allow 53/udp
+        RUN ufw allow 53/tcp
+        RUN yarn global add pm2
         COPY dist /dist
-        CMD node --harmony /dist/core.bundle.js
+        COPY pm2.environment.config.js /pm2.environment.config.js
+        CMD pm2-runtime pm2.environment.config.js
     deploy:
       restart_policy:
         condition: on-failure
