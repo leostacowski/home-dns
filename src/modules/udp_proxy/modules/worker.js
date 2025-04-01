@@ -1,22 +1,24 @@
 import { createSocket } from 'dgram'
 import { Logger } from '@common/logger.js'
 
-const Worker = () => {
+export const UDPWorker = () => {
   const logger = Logger(`udp_proxy_worker_${process.pid}`)
 
   logger.info(`Worker is ready`)
 
-  const getResponse = ({ connectionId, address, port, requestData }) => {
-    requestData = Buffer.from(requestData, 'hex')
+  const getResponse = ({ type, id, address, requestData }) => {
+    if (type !== 'udp_request') return
 
+    requestData = Buffer.from(requestData, 'binary')
+
+    const serverPort = address.split(':')?.[1] || 53
     const client = createSocket('udp4')
 
     client.on('message', (resMessage) => {
       process.send({
-        connectionId,
+        id,
         address,
-        port,
-        response: Buffer.from(resMessage).toString('hex'),
+        response: Buffer.from(resMessage).toString('binary'),
       })
 
       client.close()
@@ -26,10 +28,8 @@ const Worker = () => {
       client.close()
     })
 
-    client.send(requestData, port, address)
+    client.send(requestData, serverPort, address)
   }
 
   process.on('message', getResponse)
 }
-
-Worker()

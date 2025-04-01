@@ -1,4 +1,8 @@
 const path = require('path')
+const webpack = require('webpack')
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 module.exports = {
   mode: 'production',
@@ -9,14 +13,6 @@ module.exports = {
     },
     core: {
       import: './src/core/index.js',
-      dependOn: ['common'],
-    },
-    udp_proxy_worker: {
-      import: './src/modules/udp_proxy/modules/worker.js',
-      dependOn: ['common'],
-    },
-    tcp_proxy_worker: {
-      import: './src/modules/tcp_proxy/modules/worker.js',
       dependOn: ['common'],
     },
   },
@@ -46,4 +42,9 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env),
+    }),
+  ],
 }

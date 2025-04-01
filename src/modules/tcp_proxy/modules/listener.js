@@ -19,13 +19,13 @@ export const Listener = ({
   })
 
   server.on('connection', (requestSocket) => {
-    const connectionId = Math.floor(Math.random() * Date.now())
+    const id = Math.floor(Math.random() * Date.now())
 
-    onConnectionStart(connectionId, Date.now())
+    onConnectionStart(id, Date.now())
 
     requestSocket.on('data', async (requestData) => {
       try {
-        requestWorkerResponse(connectionId, requestData).then((response) => {
+        requestWorkerResponse(id, requestData).then((response) => {
           requestSocket.write(response)
           requestSocket.end()
         })
@@ -41,7 +41,7 @@ export const Listener = ({
     })
 
     requestSocket.on('end', () => {
-      onConnectionEnd(connectionId, Date.now())
+      onConnectionEnd(id, Date.now())
       requestSocket.destroy()
     })
   })

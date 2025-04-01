@@ -1,3 +1,5 @@
+import { cpus } from 'os'
+
 const {
   DNS_SERVERS,
   PROXY_WORKERS_COUNT,
@@ -11,7 +13,7 @@ const {
 
 export const dns_servers = String(DNS_SERVERS || '8.8.8.8,1.1.1.1').split(',')
 
-export const proxy_workers_count = Number(PROXY_WORKERS_COUNT || '2')
+export const proxy_workers_count = Number(PROXY_WORKERS_COUNT || cpus().length)
 
 export const tcp_proxy_timeout = Number(TCP_PROXY_TIMEOUT || '1000')
 

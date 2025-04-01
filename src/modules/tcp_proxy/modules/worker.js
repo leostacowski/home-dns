@@ -1,25 +1,27 @@
 import { createConnection } from 'net'
 import { Logger } from '@common/logger.js'
 
-const Worker = () => {
+export const TCPWorker = () => {
   const logger = Logger(`tcp_proxy_worker_${process.pid}`)
 
   logger.info(`Worker is ready`)
 
-  const getResponse = ({ connectionId, address, port, requestData }) => {
-    requestData = Buffer.from(requestData, 'hex')
+  const getResponse = ({ type, id, address, requestData }) => {
+    if (type !== 'tcp_request') return
+
+    requestData = Buffer.from(requestData, 'binary')
+    const serverPort = address.split(':')?.[1] || 53
 
     const client = createConnection({
-      port,
+      port: serverPort,
       host: address,
     })
 
     client.on('data', (resData) => {
       process.send({
-        connectionId,
+        id,
         address,
-        port,
-        response: Buffer.from(resData).toString('hex'),
+        response: Buffer.from(resData).toString('binary'),
       })
 
       client.end()
@@ -38,5 +40,3 @@ const Worker = () => {
 
   process.on('message', getResponse)
 }
-
-Worker()

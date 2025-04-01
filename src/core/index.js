@@ -1,28 +1,24 @@
-import dotenv from 'dotenv'
-import child_process from 'child_process'
-import path from 'path'
-import { TCPProxy } from '@modules/tcp_proxy'
-import { UDPProxy } from '@modules/udp_proxy'
-import { proxy_workers_count } from '@common/configs.js'
+import { fork, isPrimary } from 'cluster'
+import { TCPProxy, TCPWorker } from '@modules/tcp_proxy'
+import { UDPProxy, UDPWorker } from '@modules/udp_proxy'
+import { proxy_workers_count, dns_servers } from '@common/configs.js'
 
-dotenv.config()
+const parentProcess = () => {
+  const workers = []
 
-const Core = async () => {
-  const tcpWorkers = []
-  const udpWorkers = []
-
-  for (let i = 0; i < proxy_workers_count; i++) {
-    tcpWorkers[i] = child_process.fork(
-      `${path.resolve(process.cwd(), 'dist/tcp_proxy_worker.bundle.js')}`,
-    )
-
-    udpWorkers[i] = child_process.fork(
-      `${path.resolve(process.cwd(), 'dist/udp_proxy_worker.bundle.js')}`,
-    )
+  for (let cProcessIdx = 0; cProcessIdx < proxy_workers_count; cProcessIdx++) {
+    workers.push(fork())
   }
 
-  TCPProxy(tcpWorkers).start()
-  UDPProxy(udpWorkers).start()
+  const udpProxy = UDPProxy()
+  const tcpProxy = TCPProxy()
+
+  Promise.all([udpProxy.start(workers), tcpProxy.start(workers)])
 }
 
-Core()
+const childProcess = () => {
+  Promise.all([UDPWorker(), TCPWorker()])
+}
+
+if (isPrimary) parentProcess()
+else childProcess()

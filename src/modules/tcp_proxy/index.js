@@ -3,23 +3,27 @@ import { Logger } from '@common/logger.js'
 import { DNSHosts } from '@modules/dns_hosts'
 import { tcp_proxy_timeout } from '@common/configs.js'
 
-export const TCPProxy = (tcpWorkers) => {
+export { TCPWorker } from '@modules/tcp_proxy/modules/worker'
+
+export const TCPProxy = () => {
   const dnsHosts = DNSHosts()
   const logger = Logger('tcp_proxy')
   const connections = {}
 
+  let workers = []
+
   const requestWorkerResponse = async (requestId, requestData) => {
-    const randomWorker = tcpWorkers[Math.floor(Math.random() * tcpWorkers.length)]
-    const encodedRequestData = Buffer.from(requestData).toString('hex')
-    const { target_servers } = dnsHosts
+    const randomWorker = workers[Math.floor(Math.random() * workers.length)]
+    const encodedRequestData = Buffer.from(requestData).toString('binary')
+    const { targetServers } = dnsHosts
 
     let workerResponse = ''
 
-    target_servers.forEach((dns_server) =>
+    targetServers.forEach((dnsServerAddress) =>
       randomWorker.send({
-        connectionId: requestId,
-        address: dns_server.address,
-        port: dns_server.port,
+        type: 'tcp_request',
+        id: requestId,
+        address: dnsServerAddress,
         requestData: encodedRequestData,
       }),
     )
@@ -27,9 +31,9 @@ export const TCPProxy = (tcpWorkers) => {
     await new Promise((resolve) => {
       let timeout = null
 
-      const messageHandler = ({ connectionId, response, address, port }) => {
-        if (connectionId === requestId && !workerResponse && response) {
-          workerResponse = Buffer.from(response, 'hex')
+      const messageHandler = ({ id, response, address, port }) => {
+        if (id === requestId && !workerResponse && response) {
+          workerResponse = Buffer.from(response, 'binary')
 
           if (connections?.[requestId])
             connections[requestId] = {
@@ -55,25 +59,27 @@ export const TCPProxy = (tcpWorkers) => {
     return workerResponse
   }
 
-  const onConnectionStart = (connectionId, startTime) => {
-    connections[connectionId] = {
+  const onConnectionStart = (id, startTime) => {
+    connections[id] = {
       startTime,
     }
   }
 
-  const onConnectionEnd = (connectionId, endTime) => {
-    if (connections?.[connectionId]) {
-      const { startTime, address, port } = connections[connectionId]
-      const proxiedAddress = address && port ? ` [${address}:${port}]` : ''
+  const onConnectionEnd = (id, endTime) => {
+    if (connections?.[id]) {
+      const { startTime, address } = connections[id]
+      const proxiedAddress = address ? ` [${address}]` : ''
 
       logger.info(`Proxy request${proxiedAddress} ended in ${endTime - startTime}ms`)
 
-      delete connections[connectionId]
+      delete connections[id]
     }
   }
 
-  const start = () => {
+  const start = (workerSets) => {
     logger.info(`Starting listener`)
+
+    workers = workerSets
 
     Listener({
       requestWorkerResponse,
@@ -86,5 +92,3 @@ export const TCPProxy = (tcpWorkers) => {
     start,
   }
 }
-
-export default TCPProxy

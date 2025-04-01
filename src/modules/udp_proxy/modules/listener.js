@@ -20,14 +20,14 @@ export const Listener = ({
 
   server.on('message', (message, reqInfo) => {
     const { address: reqAddress, port: reqPort } = reqInfo
-    const connectionId = Math.floor(Math.random() * Date.now())
+    const id = Math.floor(Math.random() * Date.now())
 
-    onConnectionStart(connectionId, Date.now())
+    onConnectionStart(id, Date.now())
 
-    requestWorkerResponse(connectionId, message).then((response) => {
+    requestWorkerResponse(id, message).then((response) => {
       server.send(response, reqPort, reqAddress)
 
-      onConnectionEnd(connectionId, Date.now())
+      onConnectionEnd(id, Date.now())
     })
   })
 
