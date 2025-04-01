@@ -1,0 +1,11 @@
+node_modules
+dist
+logs
+LICENSE
+README.md
+jsconfig.json
+nodemon.json
+.dockerignore
+.git
+.gitignore
+.env.example

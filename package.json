@@ -7,10 +7,7 @@
   "license": "Unlicense",
   "private": false,
   "scripts": {
-    "setup": "yarn && cls",
-    "prebuild": "yarn setup",
-    "build": "webpack --config webpack.config.js",
-    "predev": "yarn setup",
+    "build": "yarn && webpack --config webpack.config.js",
     "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
