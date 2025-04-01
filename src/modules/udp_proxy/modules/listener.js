@@ -18,17 +18,17 @@ export const Listener = ({
     logger.error(`Server error: ${error?.message || JSON.stringify(error)}`)
   })
 
-  server.on('message', async (message, reqInfo) => {
+  server.on('message', (message, reqInfo) => {
     const { address: reqAddress, port: reqPort } = reqInfo
     const connectionId = Math.floor(Math.random() * Date.now())
 
     onConnectionStart(connectionId, Date.now())
 
-    const response = await requestWorkerResponse(connectionId, message)
+    requestWorkerResponse(connectionId, message).then((response) => {
+      server.send(response, reqPort, reqAddress)
 
-    server.send(response, reqPort, reqAddress)
-
-    onConnectionEnd(connectionId, Date.now())
+      onConnectionEnd(connectionId, Date.now())
+    })
   })
 
   server.bind({

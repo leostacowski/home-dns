@@ -10,7 +10,7 @@ export const UDPProxy = (udpWorkers) => {
 
   const requestWorkerResponse = async (requestId, requestData) => {
     const randomWorker = udpWorkers[Math.floor(Math.random() * udpWorkers.length)]
-    const encodedRequestData = Buffer.from(requestData).toString('binary')
+    const encodedRequestData = Buffer.from(requestData).toString('hex')
     const { target_servers } = dnsHosts
 
     let workerResponse = ''
@@ -29,7 +29,7 @@ export const UDPProxy = (udpWorkers) => {
 
       const messageHandler = ({ connectionId, response, address, port }) => {
         if (connectionId === requestId && !workerResponse && response) {
-          workerResponse = Buffer.from(response, 'binary')
+          workerResponse = Buffer.from(response, 'hex')
 
           if (connections?.[requestId])
             connections[requestId] = {

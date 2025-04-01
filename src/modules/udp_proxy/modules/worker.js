@@ -7,7 +7,7 @@ const Worker = () => {
   logger.info(`Worker is ready`)
 
   const getResponse = ({ connectionId, address, port, requestData }) => {
-    requestData = Buffer.from(requestData, 'binary')
+    requestData = Buffer.from(requestData, 'hex')
 
     const client = createSocket('udp4')
 
@@ -16,7 +16,7 @@ const Worker = () => {
         connectionId,
         address,
         port,
-        response: Buffer.from(resMessage).toString('binary'),
+        response: Buffer.from(resMessage).toString('hex'),
       })
 
       client.close()

@@ -10,7 +10,7 @@ export const TCPProxy = (tcpWorkers) => {
 
   const requestWorkerResponse = async (requestId, requestData) => {
     const randomWorker = tcpWorkers[Math.floor(Math.random() * tcpWorkers.length)]
-    const encodedRequestData = Buffer.from(requestData).toString('binary')
+    const encodedRequestData = Buffer.from(requestData).toString('hex')
     const { target_servers } = dnsHosts
 
     let workerResponse = ''
@@ -29,7 +29,7 @@ export const TCPProxy = (tcpWorkers) => {
 
       const messageHandler = ({ connectionId, response, address, port }) => {
         if (connectionId === requestId && !workerResponse && response) {
-          workerResponse = Buffer.from(response, 'binary')
+          workerResponse = Buffer.from(response, 'hex')
 
           if (connections?.[requestId])
             connections[requestId] = {

@@ -25,10 +25,10 @@ export const Listener = ({
 
     requestSocket.on('data', async (requestData) => {
       try {
-        const response = await requestWorkerResponse(connectionId, requestData)
-
-        requestSocket.write(response)
-        requestSocket.end()
+        requestWorkerResponse(connectionId, requestData).then((response) => {
+          requestSocket.write(response)
+          requestSocket.end()
+        })
       } catch (exception) {
         logger.error(`Socket error: ${exception?.message || JSON.stringify(exception)}`)
         requestSocket.end()

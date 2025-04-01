@@ -7,7 +7,7 @@ const Worker = () => {
   logger.info(`Worker is ready`)
 
   const getResponse = ({ connectionId, address, port, requestData }) => {
-    requestData = Buffer.from(requestData, 'binary')
+    requestData = Buffer.from(requestData, 'hex')
 
     const client = createConnection({
       port,
@@ -19,7 +19,7 @@ const Worker = () => {
         connectionId,
         address,
         port,
-        response: Buffer.from(resData).toString('binary'),
+        response: Buffer.from(resData).toString('hex'),
       })
 
       client.end()
