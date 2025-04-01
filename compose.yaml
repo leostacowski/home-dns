@@ -4,20 +4,27 @@ services:
   home-dns-node-service:
     container_name: home-dns-node-container
     pull_policy: missing
+    healthcheck:
+      test: 'nslookup -timeout=5 google.com 127.0.0.1'
+      interval: 15m
+      timeout: 30s
+      retries: 5
+      start_period: 5s
+      start_interval: 0s
     build:
       context: .
-      no_cache: true
       dockerfile_inline: |
         FROM node:lts-slim
         USER root
         RUN apt-get update -y
-        RUN apt-get install ufw -y
+        RUN apt-get install ufw dnsutils -y
         RUN ufw allow 53/udp
         RUN ufw allow 53/tcp
         RUN yarn global add pm2
-        COPY dist /dist
-        COPY pm2.environment.config.js /pm2.environment.config.js
-        CMD pm2-runtime pm2.environment.config.js
+        ADD 'https://www.random.org/integers/?num=1&min=1&max=100000&col=1&base=10&format=plain&rnd=new' random.org.txt
+        COPY dist /dist 
+        COPY pm2.environment.config.js /pm2.environment.config.js 
+        CMD pm2-runtime pm2.environment.config.js skipcache
     deploy:
       restart_policy:
         condition: on-failure
