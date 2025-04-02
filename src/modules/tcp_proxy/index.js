@@ -31,7 +31,7 @@ export const TCPProxy = (dnsProxy) => {
     await new Promise((resolve) => {
       let timeout = null
 
-      const messageHandler = ({ id, response, address, port }) => {
+      const messageHandler = ({ id, response, address }) => {
         if (id === requestId && !workerResponse && response) {
           workerResponse = Buffer.from(response, 'binary')
 
@@ -39,7 +39,6 @@ export const TCPProxy = (dnsProxy) => {
             connections[requestId] = {
               ...connections[requestId],
               address,
-              port,
             }
 
           randomWorker.removeListener('message', messageHandler)
@@ -71,7 +70,9 @@ export const TCPProxy = (dnsProxy) => {
       const proxiedAddress = address ? ` [${address}]` : ''
       const delay = endTime - startTime
 
-      dnsProxy.registerHit(address, delay)
+      if (proxiedAddress) {
+        dnsProxy.registerHit(address, delay)
+      }
 
       logger.info(`Proxy request${proxiedAddress} ended in ${delay}ms`)
 

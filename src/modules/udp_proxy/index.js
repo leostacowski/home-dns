@@ -70,7 +70,9 @@ export const UDPProxy = (dnsProxy) => {
       const proxiedAddress = address ? ` [${address}]` : ''
       const delay = endTime - startTime
 
-      dnsProxy.registerHit(address, delay)
+      if (proxiedAddress) {
+        dnsProxy.registerHit(address, delay)
+      }
 
       logger.info(`Proxy request${proxiedAddress} ended in ${delay}ms`)
 
