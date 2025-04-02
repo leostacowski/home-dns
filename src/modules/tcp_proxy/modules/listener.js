@@ -39,7 +39,6 @@ export const Listener = ({
 
     requestSocket.on('end', () => {
       onConnectionEnd(id, Date.now())
-      requestSocket.destroy()
     })
   })
 
