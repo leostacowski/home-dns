@@ -68,8 +68,11 @@ export const UDPProxy = () => {
     if (connections?.[id]) {
       const { startTime, address } = connections[id]
       const proxiedAddress = address ? ` [${address}]` : ''
+      const delay = endTime - startTime
 
-      logger.info(`Proxy request${proxiedAddress} ended in ${endTime - startTime}ms`)
+      dnsHosts.registerHit(address, delay)
+
+      logger.info(`Proxy request${proxiedAddress} ended in ${delay}ms`)
 
       delete connections[id]
     }

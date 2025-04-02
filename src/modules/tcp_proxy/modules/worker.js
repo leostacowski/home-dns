@@ -10,11 +10,11 @@ export const TCPWorker = () => {
     if (type !== 'tcp_request') return
 
     requestData = Buffer.from(requestData, 'binary')
-    const serverPort = address.split(':')?.[1] || 53
+    const [serverAddress, serverPort = 53] = address.split(':')
 
     const client = createConnection({
       port: serverPort,
-      host: address,
+      host: serverAddress,
     })
 
     client.on('data', (resData) => {

@@ -36,6 +36,6 @@ services:
       - 53:53/udp
       - 53:53/tcp
     volumes:
-      - node-volume:/home-dns
+      - node-volume:/home-dns/logs
 volumes:
   node-volume: {}

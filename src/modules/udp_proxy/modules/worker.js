@@ -11,7 +11,7 @@ export const UDPWorker = () => {
 
     requestData = Buffer.from(requestData, 'binary')
 
-    const serverPort = address.split(':')?.[1] || 53
+    const [serverAddress, serverPort = 53] = address.split(':')
     const client = createSocket('udp4')
 
     client.on('message', (resMessage) => {
@@ -28,7 +28,7 @@ export const UDPWorker = () => {
       client.close()
     })
 
-    client.send(requestData, serverPort, address)
+    client.send(requestData, serverPort, serverAddress)
   }
 
   process.on('message', getResponse)
