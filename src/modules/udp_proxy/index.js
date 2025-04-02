@@ -1,12 +1,10 @@
 import { Listener } from '@modules/udp_proxy/modules/listener'
 import { Logger } from '@common/logger.js'
-import { DNSHosts } from '@modules/dns_hosts'
 import { udp_proxy_timeout } from '@common/configs.js'
 
 export { UDPWorker } from '@modules/udp_proxy/modules/worker'
 
-export const UDPProxy = () => {
-  const dnsHosts = DNSHosts()
+export const UDPProxy = (dnsProxy) => {
   const logger = Logger('udp_proxy')
   const connections = {}
 
@@ -15,18 +13,20 @@ export const UDPProxy = () => {
   const requestWorkerResponse = async (requestId, requestData) => {
     const randomWorker = workers[Math.floor(Math.random() * workers.length)]
     const encodedRequestData = Buffer.from(requestData).toString('binary')
-    const { targetServers } = dnsHosts
+    const targetServers = dnsProxy.getServers()
 
     let workerResponse = ''
 
-    targetServers.forEach((dnsServerAddress) =>
+    for (let serverIdx = 0; serverIdx < targetServers.length; serverIdx++) {
+      const dnsServerAddress = targetServers[serverIdx]
+
       randomWorker.send({
         type: 'udp_request',
         id: requestId,
         address: dnsServerAddress,
         requestData: encodedRequestData,
-      }),
-    )
+      })
+    }
 
     await new Promise((resolve) => {
       let timeout = null
@@ -70,7 +70,7 @@ export const UDPProxy = () => {
       const proxiedAddress = address ? ` [${address}]` : ''
       const delay = endTime - startTime
 
-      dnsHosts.registerHit(address, delay)
+      dnsProxy.registerHit(address, delay)
 
       logger.info(`Proxy request${proxiedAddress} ended in ${delay}ms`)
 

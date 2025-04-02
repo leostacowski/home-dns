@@ -8,12 +8,8 @@ module.exports = {
   mode: 'production',
   target: 'node',
   entry: {
-    common: {
-      import: ['./src/common/logger.js', './src/common/configs.js'],
-    },
     core: {
       import: './src/core/index.js',
-      dependOn: ['common'],
     },
   },
   resolve: {

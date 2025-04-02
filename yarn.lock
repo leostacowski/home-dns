@@ -1355,6 +1355,11 @@ fecha@^4.2.0:
   resolved "https://registry.yarnpkg.com/fecha/-/fecha-4.2.3.tgz#4d9ccdbc61e8629b259fdca67e65891448d569fd"
   integrity sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==
 
+file-system-cache@^3.0.0-alpha.8:
+  version "3.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/file-system-cache/-/file-system-cache-3.0.0-alpha.8.tgz#cecb4374266c1619af50c3804464443a87d6adfc"
+  integrity sha512-DKzByUd1LjyPfXHdVjEjkaqEuWIFgjJ/D1WkdVI7zC/jxXgkADkg5nPac0EKw8NOdF8QV7T9e3VelfRu+Thr4w==
+
 fill-range@^7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/fill-range/-/fill-range-7.1.1.tgz#44265d3cac07e3ea7dc247516380643754a05292"

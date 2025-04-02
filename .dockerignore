@@ -1,11 +1,12 @@
 node_modules
 dist
-logs
 LICENSE
 README.md
 jsconfig.json
 nodemon.json
+.cache
 .dockerignore
+.env.example
 .git
 .gitignore
-.env.example
+.logs
