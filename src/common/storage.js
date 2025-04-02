@@ -6,8 +6,6 @@ export const Storage = ({ label = 'global' } = {}) => {
   const storageDir = resolve(storage_path)
   const storageFile = resolve(storageDir, `${label}.json`)
 
-  console.log(storageFile)
-
   try {
     if (!existsSync(storageDir)) mkdirSync(storageDir)
     if (!existsSync(storageFile)) writeFileSync(storageFile, '{}')
@@ -34,7 +32,10 @@ export const Storage = ({ label = 'global' } = {}) => {
       const currentFile = readFileSync(storageFile, 'utf8')
       const currentData = JSON.parse(currentFile)
 
-      currentData[key] = value
+      currentData[key] = {
+        ...value,
+        timestamp: Date.now(),
+      }
 
       writeFileSync(storageFile, JSON.stringify(currentData))
 
