@@ -29,6 +29,6 @@ export const udp_proxy_address = String(UDP_PROXY_ADDRESS || '0.0.0.0')
 
 export const udp_proxy_port = Number(UDP_PROXY_PORT || '53')
 
-export const storage_path = String(STORAGE_PATH || './.cache')
+export const storage_path = String(STORAGE_PATH || './.storage')
 
 export const logger_path = String(LOGS_PATH || './.logs')
