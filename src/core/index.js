@@ -1,27 +1,13 @@
-import { fork, isPrimary } from 'cluster'
-import { TCPProxy, TCPWorker } from '@modules/tcp_proxy'
-import { UDPProxy, UDPWorker } from '@modules/udp_proxy'
-import { DNSProxy } from '@modules/dns_proxy'
-import { proxy_workers_count } from '@common/configs.js'
+import { isPrimary } from 'cluster'
+import { ParentProcess } from '@core/modules/parent_process'
+import { ChildProcess } from '@core/modules/child_process'
 
-const parentProcess = () => {
-  const dnsProxy = DNSProxy()
-  const udpProxy = UDPProxy(dnsProxy)
-  const tcpProxy = TCPProxy(dnsProxy)
-  const workers = []
+if (isPrimary) {
+  const parentProcess = ParentProcess()
 
-  for (let cProcessIdx = 0; cProcessIdx < proxy_workers_count; cProcessIdx++) {
-    workers.push(fork())
-  }
+  parentProcess.start()
+} else {
+  const childProcess = ChildProcess()
 
-  Promise.all([udpProxy.start(workers), tcpProxy.start(workers)])
-
-  process.on('SIGINT', () => {
-    process.exit(0)
-  })
+  childProcess.start()
 }
-
-const childProcess = () => Promise.all([UDPWorker(), TCPWorker()])
-
-if (isPrimary) parentProcess()
-else childProcess()

@@ -1,8 +1,8 @@
 import { Storage } from '@common/storage.js'
 import { dns_servers } from '@common/configs.js'
 
-export const DNSProxy = () => {
-  const hitsStorage = Storage({ label: 'dns_proxy_hits' })
+export const DNSServers = () => {
+  const hitsStorage = Storage({ label: 'dns_servers_hits' })
   const hits = hitsStorage.list() || {}
 
   let targetServers = [...dns_servers]

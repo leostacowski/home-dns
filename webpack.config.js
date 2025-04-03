@@ -9,7 +9,7 @@ module.exports = {
   target: 'node',
   entry: {
     core: {
-      import: './src/core/index.js',
+      import: '@core/index.js',
     },
   },
   resolve: {
