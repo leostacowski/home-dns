@@ -1,7 +1,7 @@
 module.exports = [
   {
-    cwd: './dist',
-    script: './core.bundle.js',
+    cwd: './',
+    script: './dist/core.bundle.js',
     name: 'home-dns',
     interpreter_args: '--harmony',
     env_production: {
