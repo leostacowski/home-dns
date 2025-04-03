@@ -26,6 +26,10 @@ export const TCPWorker = () => {
         })
       })
 
+      client.on('error', (exception) => {
+        logger.warn(`Worker socket error: ${exception?.message || JSON.stringify(exception)}`)
+      })
+
       client.write(requestData)
     } catch (exception) {
       logger.error(`Worker exception: ${exception?.message || JSON.stringify(exception)}`)

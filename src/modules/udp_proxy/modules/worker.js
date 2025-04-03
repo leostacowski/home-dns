@@ -20,12 +20,10 @@ export const UDPWorker = () => {
           address,
           response: Buffer.from(resMessage).toString('binary'),
         })
-
-        client.close()
       })
 
       client.on('error', () => {
-        client.close()
+        logger.warn(`Worker socket error: ${exception?.message || JSON.stringify(exception)}`)
       })
 
       client.send(requestData, serverPort, serverAddress)

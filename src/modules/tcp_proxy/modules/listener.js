@@ -1,6 +1,6 @@
 import { createServer } from 'net'
 import { Logger } from '@common/logger.js'
-import { tcp_proxy_address, tcp_proxy_port } from '@common/configs.js'
+import { tcp_proxy_address, tcp_proxy_port, tcp_proxy_timeout } from '@common/configs.js'
 
 export const Listener = ({
   requestWorkerResponse = () => {},
@@ -10,8 +10,11 @@ export const Listener = ({
   const logger = Logger(`tcp_proxy_listener`)
   const server = createServer()
 
+  let listening = false
+
   server.on('listening', () => {
     logger.info(`Server is ready for requests`)
+    listening = true
   })
 
   server.on('error', (error) => {
@@ -31,7 +34,7 @@ export const Listener = ({
       })
 
       requestSocket.on('error', (error) => {
-        logger.error(`Socket error: ${error?.message || JSON.stringify(error)}`)
+        logger.warn(`Socket error: ${error?.message || JSON.stringify(error)}`)
       })
 
       requestSocket.on('end', () => {
@@ -46,6 +49,13 @@ export const Listener = ({
     host: tcp_proxy_address,
     port: tcp_proxy_port,
   })
+
+  setTimeout(() => {
+    if (!listening) {
+      logger.error(`Server timeout`)
+      process.exit(1)
+    }
+  }, tcp_proxy_timeout)
 }
 
 export default Listener

@@ -1,6 +1,6 @@
 import { createSocket } from 'dgram'
 import { Logger } from '@common/logger.js'
-import { udp_proxy_address, udp_proxy_port } from '@common/configs.js'
+import { udp_proxy_address, udp_proxy_port, udp_proxy_timeout } from '@common/configs.js'
 
 export const Listener = ({
   requestWorkerResponse = () => {},
@@ -10,8 +10,11 @@ export const Listener = ({
   const logger = Logger(`udp_proxy_listener`)
   const server = createSocket('udp4')
 
+  let listening = false
+
   server.on('listening', () => {
     logger.info(`Server is ready for requests`)
+    listening = true
   })
 
   server.on('error', (error) => {
@@ -31,7 +34,7 @@ export const Listener = ({
 
       onConnectionEnd(id, Date.now())
     } catch (exception) {
-      logger.error(`Socket exception: ${exception?.message || JSON.stringify(exception)}`)
+      logger.warn(`Socket exception: ${exception?.message || JSON.stringify(exception)}`)
     }
   })
 
@@ -39,4 +42,11 @@ export const Listener = ({
     address: udp_proxy_address,
     port: udp_proxy_port,
   })
+
+  setTimeout(() => {
+    if (!listening) {
+      logger.error(`Server timeout`)
+      process.exit(1)
+    }
+  }, udp_proxy_timeout)
 }
