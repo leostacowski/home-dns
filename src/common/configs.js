@@ -1,4 +1,5 @@
 import { cpus } from 'os'
+import { resolve } from 'path'
 
 const {
   DNS_SERVERS,
@@ -29,6 +30,8 @@ export const udp_proxy_address = String(UDP_PROXY_ADDRESS || '0.0.0.0')
 
 export const udp_proxy_port = Number(UDP_PROXY_PORT || '53')
 
-export const storage_path = String(STORAGE_PATH || './.storage')
+export const dist_path = resolve(process.cwd(), './dist')
 
-export const logger_path = String(LOGS_PATH || './.logs')
+export const logger_path = resolve(process.cwd(), String(LOGS_PATH || './.logs'))
+
+export const storage_path = resolve(process.cwd(), String(STORAGE_PATH || './.storage'))

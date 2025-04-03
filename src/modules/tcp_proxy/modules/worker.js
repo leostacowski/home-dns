@@ -9,33 +9,28 @@ export const TCPWorker = () => {
   const getResponse = ({ type, id, address, requestData }) => {
     if (type !== 'tcp_request') return
 
-    requestData = Buffer.from(requestData, 'binary')
-    const [serverAddress, serverPort = 53] = address.split(':')
+    try {
+      requestData = Buffer.from(requestData, 'binary')
+      const [serverAddress, serverPort = 53] = address.split(':')
 
-    const client = createConnection({
-      port: serverPort,
-      host: serverAddress,
-    })
-
-    client.on('data', (resData) => {
-      process.send({
-        id,
-        address,
-        response: Buffer.from(resData).toString('binary'),
+      const client = createConnection({
+        port: serverPort,
+        host: serverAddress,
       })
 
-      client.end()
-    })
+      client.on('data', (resData) => {
+        process.send({
+          id,
+          address,
+          response: Buffer.from(resData).toString('binary'),
+        })
+      })
 
-    client.on('error', () => {
-      client.end()
-    })
-
-    client.on('end', () => {
-      client.destroy()
-    })
-
-    client.write(requestData)
+      client.write(requestData)
+    } catch (exception) {
+      logger.error(`Worker exception: ${exception?.message || JSON.stringify(exception)}`)
+    }
+    
   }
 
   process.on('message', getResponse)

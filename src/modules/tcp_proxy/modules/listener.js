@@ -16,30 +16,30 @@ export const Listener = ({
 
   server.on('error', (error) => {
     logger.error(`Server error: ${error?.message || JSON.stringify(error)}`)
+    process.exit(1)
   })
 
   server.on('connection', (requestSocket) => {
-    const id = Math.floor(Math.random() * Date.now())
+    try {
+      const id = Math.floor(Math.random() * Date.now())
 
-    onConnectionStart(id, Date.now())
+      onConnectionStart(id, Date.now())
 
-    requestSocket.on('data', async (requestData) => {
-      try {
-        requestWorkerResponse(id, requestData).then((response) => {
-          requestSocket.write(response)
-        })
-      } catch (exception) {
-        logger.error(`Socket error: ${exception?.message || JSON.stringify(exception)}`)
-      }
-    })
+      requestSocket.on('data', async (requestData) => {
+        const workerResponse = await requestWorkerResponse(id, requestData)
+        requestSocket.write(workerResponse)
+      })
 
-    requestSocket.on('error', (error) => {
-      logger.error(`Socket error: ${error?.message || JSON.stringify(error)}`)
-    })
+      requestSocket.on('error', (error) => {
+        logger.error(`Socket error: ${error?.message || JSON.stringify(error)}`)
+      })
 
-    requestSocket.on('end', () => {
-      onConnectionEnd(id, Date.now())
-    })
+      requestSocket.on('end', () => {
+        onConnectionEnd(id, Date.now())
+      })
+    } catch (exception) {
+      logger.error(`Socket exception: ${exception?.message || JSON.stringify(exception)}`)
+    }
   })
 
   server.listen({

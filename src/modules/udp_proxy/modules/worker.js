@@ -9,26 +9,29 @@ export const UDPWorker = () => {
   const getResponse = ({ type, id, address, requestData }) => {
     if (type !== 'udp_request') return
 
-    requestData = Buffer.from(requestData, 'binary')
+    try {
+      requestData = Buffer.from(requestData, 'binary')
+      const [serverAddress, serverPort = 53] = address.split(':')
+      const client = createSocket('udp4')
 
-    const [serverAddress, serverPort = 53] = address.split(':')
-    const client = createSocket('udp4')
+      client.on('message', (resMessage) => {
+        process.send({
+          id,
+          address,
+          response: Buffer.from(resMessage).toString('binary'),
+        })
 
-    client.on('message', (resMessage) => {
-      process.send({
-        id,
-        address,
-        response: Buffer.from(resMessage).toString('binary'),
+        client.close()
       })
 
-      client.close()
-    })
+      client.on('error', () => {
+        client.close()
+      })
 
-    client.on('error', () => {
-      client.close()
-    })
-
-    client.send(requestData, serverPort, serverAddress)
+      client.send(requestData, serverPort, serverAddress)
+    } catch (exception) {
+      logger.error(`Worker exception: ${exception?.message || JSON.stringify(exception)}`)
+    }
   }
 
   process.on('message', getResponse)

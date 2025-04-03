@@ -3,11 +3,10 @@ import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs'
 import { storage_path } from '@common/configs.js'
 
 export const Storage = ({ label = 'global' } = {}) => {
-  const storageDir = resolve(storage_path)
-  const storageFile = resolve(storageDir, `${label}.json`)
+  const storageFile = resolve(storage_path, `./${label}.json`)
 
   try {
-    if (!existsSync(storageDir)) mkdirSync(storageDir)
+    if (!existsSync(storage_path)) mkdirSync(storage_path)
     if (!existsSync(storageFile)) writeFileSync(storageFile, '{}')
   } catch {}
 
@@ -34,10 +33,10 @@ export const Storage = ({ label = 'global' } = {}) => {
 
       currentData[key] = {
         ...value,
-        timestamp: Date.now(),
+        lastHit: Date.now(),
       }
 
-      writeFileSync(storageFile, JSON.stringify(currentData))
+      writeFileSync(storageFile, JSON.stringify(currentData, null, 2))
 
       return true
     } catch {

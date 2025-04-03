@@ -16,19 +16,23 @@ export const Listener = ({
 
   server.on('error', (error) => {
     logger.error(`Server error: ${error?.message || JSON.stringify(error)}`)
+    process.exit(1)
   })
 
-  server.on('message', (message, reqInfo) => {
-    const { address: reqAddress, port: reqPort } = reqInfo
-    const id = Math.floor(Math.random() * Date.now())
+  server.on('message', async (message, reqInfo) => {
+    try {
+      const { address: reqAddress, port: reqPort } = reqInfo
+      const id = Math.floor(Math.random() * Date.now())
 
-    onConnectionStart(id, Date.now())
+      onConnectionStart(id, Date.now())
 
-    requestWorkerResponse(id, message).then((response) => {
-      server.send(response, reqPort, reqAddress)
+      const workerResponse = await requestWorkerResponse(id, message)
+      server.send(workerResponse, reqPort, reqAddress)
 
       onConnectionEnd(id, Date.now())
-    })
+    } catch (exception) {
+      logger.error(`Socket exception: ${exception?.message || JSON.stringify(exception)}`)
+    }
   })
 
   server.bind({

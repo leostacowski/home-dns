@@ -1,8 +1,5 @@
 import { createLogger, transports, format } from 'winston'
-import { resolve } from 'path'
 import { logger_path } from '@common/configs.js'
-
-const loggerDir = resolve(logger_path)
 
 const logDirDateName = () => {
   const date = new Date()
@@ -30,7 +27,7 @@ export const Logger = (loggerLabel = '') => {
       }),
       new transports.File({
         level: 'error',
-        filename: `${loggerDir}/errors/${logDirDateName()}/errors.log`,
+        filename: `${logger_path}/errors/${logDirDateName()}/errors.log`,
         format: combine(label({ label: loggerLabel }), timestamp(), json(logFormat)),
       }),
     ],
