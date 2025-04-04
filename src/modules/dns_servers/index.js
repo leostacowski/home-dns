@@ -31,9 +31,17 @@ export const DNSServers = () => {
     const record = hits[host] || {
       hits: 0,
       avg: 0,
+      mHits: 0,
     }
 
-    record.avg = Math.round(((record.hits || 1) * record.avg + delay) / (record.hits + 1))
+    if (record.hits >= 1000000) {
+      record.mHits += 1
+      record.hits = 0
+    }
+
+    const hitCount = (record.hits || 1) + record.mHits * 1000000
+
+    record.avg = Math.round((hitCount * record.avg + delay) / (hitCount + 1))
     record.hits += 1
     record.lastDelay = delay
 

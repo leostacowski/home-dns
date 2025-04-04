@@ -1,6 +1,6 @@
 {
   "name": "home-dns",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "src/core/index.js",
   "repository": "https://github.com/leostacowski/home-dns.git",
   "author": "Leonardo RS <leonardo.stacowski@hotmail.com>",
