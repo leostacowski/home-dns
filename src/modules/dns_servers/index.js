@@ -34,12 +34,14 @@ export const DNSServers = () => {
       mHits: 0,
     }
 
-    if (record.hits >= 1000000) {
-      record.mHits += 1
+    if (record?.hits >= 1000000) {
+      if (!record?.mHits) record.mHits = 1
+      else record.mHits += 1
+
       record.hits = 0
     }
 
-    const hitCount = (record.hits || 1) + record.mHits * 1000000
+    const hitCount = Number(record.hits || 1) + Number(record.mHits * 1000000)
 
     record.avg = Math.round((hitCount * record.avg + delay) / (hitCount + 1))
     record.hits += 1
