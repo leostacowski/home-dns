@@ -1,5 +1,9 @@
-import { cpus } from 'os'
+import { availableParallelism } from 'os'
 import { resolve } from 'path'
+
+export const is_windows = process.platform === 'win32'
+
+export const listeners_count = is_windows ? 1 : availableParallelism() * 2
 
 export const dns_servers = [
   '94.140.14.14',
@@ -13,8 +17,6 @@ export const dns_servers = [
 
 export const udp_server_timeout = 1000
 
-export const is_windows = process.platform === 'win32'
-
 export const udp_server_bind_address = is_windows ? '127.0.0.1' : '0.0.0.0'
 
 export const udp_server_bind_port = 53
@@ -22,5 +24,3 @@ export const udp_server_bind_port = 53
 export const logger_path = resolve(process.cwd(), './.logs')
 
 export const storage_path = resolve(process.cwd(), './.storage')
-
-export const listeners_count = is_windows ? 1 : cpus().length * 2
