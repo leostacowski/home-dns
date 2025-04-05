@@ -1,6 +1,6 @@
 module.exports = [
   {
-    cwd: './home-dns',
+    cwd: '/home/leostacowski/home-dns',
     script: './dist/core.bundle.js',
     name: 'home-dns',
     interpreter_args: '--harmony',
