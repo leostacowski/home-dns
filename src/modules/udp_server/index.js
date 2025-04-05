@@ -4,6 +4,7 @@ import {
   udp_server_bind_address,
   udp_server_bind_port,
   udp_server_timeout,
+  is_windows,
 } from '@common/configs.js'
 
 export const UDPServer = () => {
@@ -48,7 +49,7 @@ export const UDPServer = () => {
 
             client.on('error', (exception) => {
               logger.warn(
-                `Client socket error: ${exception?.message || JSON.stringify(exception)}`
+                `Client socket error: ${exception?.message || JSON.stringify(exception)}`,
               )
 
               client.close()
@@ -61,7 +62,7 @@ export const UDPServer = () => {
         server.send(response, reqPort, reqAddress)
       } catch (exception) {
         logger.warn(
-          `Server socket exception: ${exception?.message || JSON.stringify(exception)}`
+          `Server socket exception: ${exception?.message || JSON.stringify(exception)}`,
         )
       } finally {
         if (chosenAddress) {
@@ -91,7 +92,7 @@ export const UDPServer = () => {
     server.bind({
       address: udp_server_bind_address,
       port: udp_server_bind_port,
-      exclusive: process.platform === 'win32',
+      exclusive: is_windows,
     })
 
     setTimeout(() => {

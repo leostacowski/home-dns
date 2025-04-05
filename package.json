@@ -1,12 +1,14 @@
 {
   "name": "home-dns",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "src/core/index.js",
   "repository": "https://github.com/leostacowski/home-dns.git",
   "author": "Leonardo RS <leonardo.stacowski@hotmail.com>",
   "license": "Unlicense",
   "private": false,
   "scripts": {
+    "pull": "git pull $npm_package_repository main",
+    "start": "yarn build && pm2 kill && pm2 start pm2.environment.config.js",
     "build": "yarn && webpack --config webpack.config.js",
     "dev": "nodemon --config nodemon.json"
   },
@@ -17,7 +19,6 @@
     "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
     "babel-loader": "^10.0.0",
-    "dotenv": "^16.4.7",
     "nodemon": "^3.1.9",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1"
