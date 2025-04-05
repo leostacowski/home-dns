@@ -7,7 +7,7 @@
   "license": "Unlicense",
   "private": false,
   "scripts": {
-    "pull": "git pull $npm_package_repository main",
+    "pull": "git pull https://github.com/leostacowski/home-dns.git main",
     "start": "yarn build && pm2 kill && pm2 start pm2.environment.config.js",
     "build": "yarn && webpack --config webpack.config.js",
     "dev": "nodemon --config nodemon.json"
