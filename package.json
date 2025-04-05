@@ -8,8 +8,8 @@
   "private": false,
   "scripts": {
     "pull": "git pull https://github.com/leostacowski/home-dns.git main",
-    "start": "yarn build && pm2 kill && pm2 start pm2.environment.config.js",
-    "build": "yarn && webpack --config webpack.config.js",
+    "start": "yarn build && pm2 kill && pm2 start pm2.environment.config.js && pm2 startup",
+    "build": "yarn && pm2 unstartup && webpack --config webpack.config.js",
     "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
