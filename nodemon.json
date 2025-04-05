@@ -1,8 +1,8 @@
 {
   "verbose": true,
-  "ignore": ["node_modules/**/*", "dist/**/*", "logs/**/*"],
+  "ignore": ["node_modules/**/*", ".storage/**/*"],
   "watch": ["*"],
-  "exec": "(cls || clear) && yarn build && node dist/core.bundle.js --harmony",
+  "exec": "(cls || clear) && node src --harmony",
   "ext": "js,json",
   "delay": "1000"
 }
