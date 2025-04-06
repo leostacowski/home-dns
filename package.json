@@ -1,27 +1,22 @@
 {
   "name": "home-dns",
-  "version": "0.0.2",
-  "main": "src/core/index.js",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.js",
   "repository": "https://github.com/leostacowski/home-dns.git",
   "author": "Leonardo RS <leonardo.stacowski@hotmail.com>",
   "license": "Unlicense",
   "private": false,
   "scripts": {
     "pull": "git pull https://github.com/leostacowski/home-dns.git main",
-    "start": "yarn build && pm2 kill && pm2 start pm2.environment.config.js && pm2 startup",
-    "build": "yarn && pm2 unstartup && webpack --config webpack.config.js",
+    "start": "pm2 unstartup && pm2 kill && pm2 start pm2.environment.config.js && pm2 startup",
     "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
-    "babel-loader": "^10.0.0",
-    "nodemon": "^3.1.9",
-    "webpack": "^5.98.0",
-    "webpack-cli": "^6.0.1"
+    "nodemon": "^3.1.9"
   },
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
