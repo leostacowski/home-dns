@@ -1,5 +1,4 @@
 import { createLogger, transports, format } from 'winston'
-import { storage_dir } from '../../config.js'
 
 export class Logger {
   constructor(loggerLabel = '') {
@@ -43,7 +42,7 @@ export class Logger {
 
     return new transports.File({
       level: 'error',
-      filename: `${storage_dir}/winston/${this.getDirName()}/errors.log`,
+      filename: `${STORAGE_DIR}/winston/${this.getDirName()}/errors.log`,
       format: combine(
         label({ label: loggerLabel }),
         timestamp(),

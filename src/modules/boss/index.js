@@ -1,25 +1,19 @@
 import cluster from 'node:cluster'
+import { DNS } from './dns/index.js'
 
 export class Boss {
   constructor() {
+    this.dns = new DNS()
     this.forkWorkers()
-  }
-
-  registerDNSHit(worker, content) {
-    console.log(content)
-  }
-
-  listDnsServers(worker, content) {
-    console.log(content)
   }
 
   setListeners(worker) {
     worker.on('message', ({ type, ...content }) => {
       switch (type) {
         case 'dns_server_hit':
-          return this.registerDNSHit(worker, content)
-        case 'dns_server_list':
-          return this.listDnsServers(worker, content)
+          return this.dns.onHit(content)
+        case 'dns_server_emit':
+          return this.dns.emit()
         default:
           return null
       }

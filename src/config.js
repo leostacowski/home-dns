@@ -12,11 +12,16 @@ export default {
       '76.76.2.0',
       '119.29.29.29',
     ]
+
     global.IS_WINDOWS = process.platform === 'win32'
     global.WORKER_COUNT = IS_WINDOWS ? 1 : availableParallelism() * 2
     global.SERVER_TIMEOUT = 1000
     global.SERVER_HOST_ADDRESS = IS_WINDOWS ? '127.0.0.1' : '0.0.0.0'
     global.SERVER_HOST_PORT = 53
+    global.CACHE_SYNC_INTERVAL = 10 * 60 * 1000
+    global.CACHE_PRUNE_INTERVAL = 30000
+    global.CACHE_TTL = 5 * 60 * 1000
     global.STORAGE_DIR = resolve(process.cwd(), './.storage')
+    global.CACHE_DIR = resolve(STORAGE_DIR, './cache')
   },
 }

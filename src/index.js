@@ -1,5 +1,6 @@
 import { isPrimary } from 'cluster'
-import { Boss, Worker } from './modules/process/index.js'
+import { Boss } from './modules/boss/index.js'
+import { Worker } from './modules/worker/index.js'
 
 import configs from './config.js'
 
