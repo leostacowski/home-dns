@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "pull": "git pull https://github.com/leostacowski/home-dns.git main",
-    "start": "pm2 unstartup && pm2 kill && pm2 start pm2.environment.config.js && pm2 startup",
+    "start": "pm2 unstartup && pm2 kill && pm2 start src/index.js && pm2 startup",
     "dev": "nodemon --config nodemon.json"
   },
   "dependencies": {
